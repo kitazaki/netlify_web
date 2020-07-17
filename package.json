@@ -13,6 +13,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@line/bot-sdk": "^6.7.1",
+    "crypto": "^1.0.1",
     "moment": "^2.27.0",
     "netlify-lambda": "^2.0.0"
   }
