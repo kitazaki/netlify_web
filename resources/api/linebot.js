@@ -7,9 +7,8 @@ const client = new line.Client({ channelAccessToken: process.env.ACCESSTOKEN });
 exports.handler = (event, context) => {
 
     let signature = crypto.createHmac('sha256', process.env.CHANNELSECRET).update(event.body).digest('base64');
-    let checkHeader = (event.headers || {})['X-Line-Signature'];
+    let checkHeader = (event.headers || {})['x-line-signature'];
     console.log(event.headers);
-    console.log(event.body);
     let body = JSON.parse(event.body);
     const events = body.events;
     console.log(events);
