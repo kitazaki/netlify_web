@@ -24,7 +24,15 @@ exports.handler = (event, context) => {
 
             switch (event.type) {
                 case "message":
-                    message = messageFunc(event);
+                    message = await messageFunc(event);
+                    client.replyMessage(body.events[0].replyToken, message).then((response) => {
+                        let lambdaResponse = {
+                            statusCode: 200,
+                            headers: { "X-Line-Status": "OK" },
+                            body: '{"result":"completed"}'
+                        };
+                        context.succeed(lambdaResponse);
+                    }).catch((err) => console.log(err));
                     break;
                 /*case "follow":
                     message = followFunc(event);
@@ -33,7 +41,7 @@ exports.handler = (event, context) => {
                     message = postbackFunc(event);
                     break;*/
             }
-
+/*
             if (message != undefined) {
                 client.replyMessage(body.events[0].replyToken, message)
                     .then((response) => {
@@ -45,6 +53,7 @@ exports.handler = (event, context) => {
                         context.succeed(lambdaResponse);
                     }).catch((err) => console.log(err));
             }
+*/
         });
     }
 
@@ -95,12 +104,12 @@ const messageFunc = async (e) => {
           message = {
             type: "text",
             text: "Fail"
-          }; 
-          return message;
+          };
+          return message; 
         });
     } else {
-      return message;
+        console.log(`メッセージ：${userMessage}`);
+        return message;
     }
 
-    console.log(`メッセージ：${userMessage}`);
 };
