@@ -89,12 +89,19 @@ const messageFunc = async (e) => {
             text: "Good Morning!!"
         };
         return message;
+    } else if (userMessage == "え") {
+        message = {
+            type: "image",
+            originalContentUrl: https://i.gyazo.com/c837f8892589d7120c6a74a6c9441c4e.jpg,
+            previewImageUrl: https://i.gyazo.com/c837f8892589d7120c6a74a6c9441c4e.jpg
+        };
+        return message;
     } else if (userMessage == "ねこ") {
         await gyazoclient.list().then((res) => {
           const gyazoimgUrl = res.data[0].url;
           console.log(gyazoimgUrl);
           message = {
-            type: 'image',
+            type: "image",
             originalContentUrl: gyazoimgUrl,
             previewImageUrl: gyazoimgUrl
           };
