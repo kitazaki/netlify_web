@@ -78,12 +78,20 @@ const messageFunc = (e) => {
             text: "Good Morning!!"
         };
     } else if (userMessage == "ねこ") {
-        const response = gyazoclient.list()
-        const gyazoimgUrl = response.data[0].url;
-        client.replyMessage(event.replyToken, {
-          type: 'image',
-          originalContentUrl: gyazoimgUrl,
-          previewImageUrl: gyazoimgUrl
+        gyazoclient.list().then((res) => {
+          const gyazoimgUrl = res.data[0].url;
+          console.log(gyazoimgUrl);
+          message = {
+            type: 'image',
+            originalContentUrl: gyazoimgUrl,
+            previewImageUrl: gyazoimgUrl
+          };
+        }).catch((err) => {
+          console.log(err);
+          message = {
+            type: "text",
+            text: "Fail"
+          }; 
         });
     }
 
