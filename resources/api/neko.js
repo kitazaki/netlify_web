@@ -6,7 +6,7 @@ const gyazoclient = new Gyazo('77da4f4d21966ad1ab497efb11406122094bbf245292d7a88
 
 const client = new line.Client({ channelAccessToken: process.env.ACCESSTOKEN });
 
-exports.handler = async (event, context) => {
+exports.handler = (event, context) => {
 
     let signature = crypto.createHmac('sha256', process.env.CHANNELSECRET).update(event.body).digest('base64');
     let checkHeader = (event.headers || {})['x-line-signature'];
