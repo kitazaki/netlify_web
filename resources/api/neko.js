@@ -17,6 +17,7 @@ exports.handler = (event, context) => {
     console.log(events);
 
     if (signature === checkHeader) {
+//    if (signature !== checkHeader) {
         events.forEach(async (event) => {
 
             let message;
@@ -52,7 +53,7 @@ exports.handler = (event, context) => {
     }
 };
 
-const messageFunc = (e) => {
+const messageFunc = async (e) => {
 
     if (e.message.type != "text") {
         console.log("テキストではないメッセージが送られてきました");
@@ -72,13 +73,15 @@ const messageFunc = (e) => {
             type: "text",
             text: "Hello World"
         };
+        return message;
     } else if (userMessage == "おはよう") {
         message = {
             type: "text",
             text: "Good Morning!!"
         };
+        return message;
     } else if (userMessage == "ねこ") {
-        gyazoclient.list().then((res) => {
+        await gyazoclient.list().then((res) => {
           const gyazoimgUrl = res.data[0].url;
           console.log(gyazoimgUrl);
           message = {
@@ -86,16 +89,18 @@ const messageFunc = (e) => {
             originalContentUrl: gyazoimgUrl,
             previewImageUrl: gyazoimgUrl
           };
+          return message;
         }).catch((err) => {
           console.log(err);
           message = {
             type: "text",
             text: "Fail"
           }; 
+          return message;
         });
+    } else {
+      return message;
     }
 
     console.log(`メッセージ：${userMessage}`);
-
-    return message;
 };
