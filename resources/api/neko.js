@@ -6,7 +6,7 @@ const gyazoclient = new Gyazo('77da4f4d21966ad1ab497efb11406122094bbf245292d7a88
 
 const client = new line.Client({ channelAccessToken: process.env.ACCESSTOKEN });
 
-exports.handler = (event, context) => {
+exports.handler = async (event, context) => {
 
     let signature = crypto.createHmac('sha256', process.env.CHANNELSECRET).update(event.body).digest('base64');
     let checkHeader = (event.headers || {})['x-line-signature'];
@@ -25,13 +25,14 @@ exports.handler = (event, context) => {
             switch (event.type) {
                 case "message":
                     message = await messageFunc(event);
+                    console.log(message);
                     client.replyMessage(body.events[0].replyToken, message).then((response) => {
-                        let lambdaResponse = {
-                            statusCode: 200,
-                            headers: { "X-Line-Status": "OK" },
-                            body: '{"result":"completed"}'
-                        };
-                        context.succeed(lambdaResponse);
+                      let lambdaResponse = {
+                        statusCode: 200,
+                        headers: { "X-Line-Status": "OK" },
+                        body: '{"result":"completed"}'
+                      };
+                      context.succeed(lambdaResponse);
                     }).catch((err) => console.log(err));
                     break;
                 /*case "follow":
@@ -90,33 +91,25 @@ const messageFunc = async (e) => {
         };
         return message;
     } else if (userMessage == "え") {
-        message = {
-            type: 'image',
-            originalContentUrl: 'https://i.gyazo.com/c837f8892589d7120c6a74a6c9441c4e.jpg',
-            previewImageUrl: 'https://i.gyazo.com/c837f8892589d7120c6a74a6c9441c4e.jpg'
-        };
+        message = { type: "image", originalContentUrl: "https://i.gyazo.com/c837f8892589d7120c6a74a6c9441c4e.jpg", previewImageUrl: "https://i.gyazo.com/c837f8892589d7120c6a74a6c9441c4e.jpg" };
+        console.log(message);
         return message;
     } else if (userMessage == "ねこ") {
         await gyazoclient.list().then((res) => {
           const gyazoimgUrl = res.data[0].url;
           console.log(gyazoimgUrl);
-          message = {
-            type: 'image',
-            originalContentUrl: gyazoimgUrl,
-            previewImageUrl: gyazoimgUrl
-          };
-          return message;
+          message = { type: "image", originalContentUrl: gyazoimgUrl, previewImageUrl: gyazoimgUrl };
+          console.log(message);
         }).catch((err) => {
           console.log(err);
           message = {
             type: "text",
             text: "Fail"
           };
-          return message; 
         });
+        return message;
     } else {
         console.log(`メッセージ：${userMessage}`);
         return message;
     }
-
 };
